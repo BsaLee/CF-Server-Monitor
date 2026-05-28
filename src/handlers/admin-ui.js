@@ -856,10 +856,10 @@ export async function handleAdminUI(request, env, sys) {
         </div>
         <div class="header-actions">
           <button onclick="refreshStats()" class="btn">
-            ↻ REFRESH
+            ↻ 刷新
           </button>
           <a href="/" class="btn">
-            ▸ DASHBOARD
+            ▸ 监控面板
           </a>
         </div>
       </div>
@@ -868,19 +868,19 @@ export async function handleAdminUI(request, env, sys) {
       <div class="stats-grid" id="stats-panel">
         <div class="stat-card">
           <div class="stat-value">${results.length}</div>
-          <div class="stat-label">Total Servers</div>
+          <div class="stat-label">服务器总数</div>
         </div>
         <div class="stat-card">
           <div class="stat-value" id="stat-online">-</div>
-          <div class="stat-label">Online</div>
+          <div class="stat-label">在线</div>
         </div>
         <div class="stat-card">
           <div class="stat-value" id="stat-offline">-</div>
-          <div class="stat-label">Offline</div>
+          <div class="stat-label">离线</div>
         </div>
         <div class="stat-card">
           <div class="stat-value" id="stat-avg-cpu">-</div>
-          <div class="stat-label">Avg CPU</div>
+          <div class="stat-label">平均CPU</div>
         </div>
       </div>
     </div>
@@ -889,8 +889,8 @@ export async function handleAdminUI(request, env, sys) {
     <div class="main-panel">
       <!-- 标签切换 -->
       <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('servers')">▸ Servers</button>
-        <button class="tab-btn" onclick="switchTab('settings')">▸ Settings</button>
+        <button class="tab-btn active" onclick="switchTab('servers')">▸ 服务器</button>
+        <button class="tab-btn" onclick="switchTab('settings')">▸ 设置</button>
       </div>
       
       <!-- 服务器管理标签 -->
@@ -901,21 +901,21 @@ export async function handleAdminUI(request, env, sys) {
         </div>
         
         <div class="toolbar">
-          <input type="text" id="newName" class="toolbar-input" placeholder="> Enter server name...">
+          <input type="text" id="newName" class="toolbar-input" placeholder="> 输入服务器名称...">
           <select id="newGroup" class="toolbar-select">
-            <option value="Default">Default</option>
+            <option value="Default">默认分组</option>
           </select>
           <button onclick="addServer()" class="btn btn-primary">
-            + ADD SERVER
+            + 添加服务器
           </button>
         </div>
         
         <div class="batch-actions">
           <button onclick="batchDelete()" class="btn btn-red">
-            🗑 BATCH DELETE
+            🗑 批量删除
           </button>
           <button onclick="selectAll()" class="btn">
-            ☐ TOGGLE ALL
+            ☐ 全选/取消
           </button>
         </div>
         
@@ -925,18 +925,18 @@ export async function handleAdminUI(request, env, sys) {
               <tr>
                 <th style="width:35px; text-align:center;">↕️</th>
                 <th style="width:30px;"><input type="checkbox" id="select-all" onchange="toggleSelectAll()" style="accent-color: var(--accent-green);"></th>
-                <th>HOSTNAME</th>
-                <th>GROUP</th>
-                <th>PRICE</th>
-                <th>EXPIRE</th>
-                <th>BANDWIDTH</th>
-                <th>TRAFFIC</th>
-                <th>STATUS</th>
-                <th>ACTIONS</th>
+                <th>主机名</th>
+                <th>分组</th>
+                <th>价格</th>
+                <th>到期时间</th>
+                <th>带宽</th>
+                <th>流量</th>
+                <th>状态</th>
+                <th>操作</th>
               </tr>
             </thead>
             <tbody>
-              ${trs || '<tr><td colspan="10" class="empty-state"><span class="empty-icon">📦</span> No servers configured</td></tr>'}
+              ${trs || '<tr><td colspan="10" class="empty-state"><span class="empty-icon">📦</span> 暂无已配置服务器</td></tr>'}
             </tbody>
           </table>
         </div>
@@ -948,29 +948,29 @@ export async function handleAdminUI(request, env, sys) {
           <!-- 外观设置 -->
           <div class="settings-section">
             <div class="section-title">
-              <span>▸</span> Appearance
+              <span>▸</span> 外观
             </div>
             
             <div class="form-group">
-              <label class="form-label">Theme <span class="required">*</span></label>
+              <label class="form-label">主题 <span class="required">*</span></label>
               <select id="cfg_theme" class="form-select" onchange="toggleCustomCss()">
-                <option value="theme1" ${sys.theme === 'theme1' ? 'selected' : ''}>[Default] Dark Terminal</option>
-                <option value="theme2" ${sys.theme === 'theme2' ? 'selected' : ''}>[White] Light Terminal</option>
-                <option value="theme6" ${sys.theme === 'theme6' ? 'selected' : ''}>[Custom] Custom CSS</option>
+                <option value="theme1" ${sys.theme === 'theme1' ? 'selected' : ''}>[默认] 深色终端</option>
+                <option value="theme2" ${sys.theme === 'theme2' ? 'selected' : ''}>[浅色] 浅色终端</option>
+                <option value="theme6" ${sys.theme === 'theme6' ? 'selected' : ''}>[自定义] 自定义CSS</option>
               </select>
             </div>
 
             <div class="form-group" id="custom_css_group" style="display: ${sys.theme === 'theme6' ? 'block' : 'none'};">
-              <label class="form-label">Custom CSS</label>
+              <label class="form-label">自定义CSS</label>
               <textarea id="cfg_custom_css" class="form-textarea" rows="5" placeholder="body.theme6 { background: #000; }">${sys.custom_css || ''}</textarea>
             </div>
             
             <div class="form-group">
-              <label class="form-label">Background Image</label>
+              <label class="form-label">背景图片</label>
               <div style="display:flex; gap:8px;">
                 <input type="text" id="cfg_custom_bg" class="form-input" value="${sys.custom_css || ''}" placeholder="https://..." style="flex:1;">
                 <div class="upload-btn-wrapper">
-                  <button class="btn" style="margin:0;">📁 UPLOAD</button>
+                  <button class="btn" style="margin:0;">📁 上传</button>
                   <input type="file" id="bg_file" accept="image/*" onchange="uploadBg(this)">
                 </div>
               </div>
@@ -978,12 +978,12 @@ export async function handleAdminUI(request, env, sys) {
             </div>
             
             <div class="form-group">
-              <label class="form-label">Site Title</label>
+              <label class="form-label">站点标题</label>
               <input type="text" id="cfg_site_title" class="form-input" value="${sys.site_title}">
             </div>
             
             <div class="form-group">
-              <label class="form-label">Admin Title</label>
+              <label class="form-label">管理后台标题</label>
               <input type="text" id="cfg_admin_title" class="form-input" value="${sys.admin_title}">
             </div>
           </div>
@@ -992,62 +992,62 @@ export async function handleAdminUI(request, env, sys) {
           <div>
             <div class="settings-section" style="margin-bottom: 20px;">
               <div class="section-title">
-                <span>▸</span> Display Options
+                <span>▸</span> 显示选项
               </div>
               
               <div class="checkbox-item highlight-box">
                 <input type="checkbox" id="cfg_auto_reset_traffic" ${sys.auto_reset_traffic === 'true' ? 'checked' : ''}>
-                <label><b>Monthly Traffic Reset</b><br><span style="font-size:10px;color:var(--text-muted);">Reset on 1st each month, persist across reboots</span></label>
-                <span class="checkbox-badge">MONTHLY</span>
+                <label><b>月度流量重置</b><br><span style="font-size:10px;color:var(--text-muted);">每月1日自动重置，持久化存储</span></label>
+                <span class="checkbox-badge">月度</span>
               </div>
               
               <div class="checkbox-item">
                 <input type="checkbox" id="cfg_is_public" ${sys.is_public === 'true' ? 'checked' : ''}>
-                <label><b>Public Access</b></label>
+                <label><b>公开访问</b></label>
               </div>
               
               <div class="checkbox-item">
                 <input type="checkbox" id="cfg_show_price" ${sys.show_price === 'true' ? 'checked' : ''}>
-                <label>Show <b>Price</b></label>
+                <label>显示 <b>价格</b></label>
               </div>
               
               <div class="checkbox-item">
                 <input type="checkbox" id="cfg_show_expire" ${sys.show_expire === 'true' ? 'checked' : ''}>
-                <label>Show <b>Expiration</b></label>
+                <label>显示 <b>到期时间</b></label>
               </div>
               
               <div class="checkbox-item">
                 <input type="checkbox" id="cfg_show_bw" ${sys.show_bw === 'true' ? 'checked' : ''}>
-                <label>Show <b>Bandwidth</b></label>
+                <label>显示 <b>带宽</b></label>
               </div>
               
               <div class="checkbox-item">
                 <input type="checkbox" id="cfg_show_tf" ${sys.show_tf === 'true' ? 'checked' : ''}>
-                <label>Show <b>Traffic Quota</b></label>
+                <label>显示 <b>流量配额</b></label>
               </div>
             </div>
             
             <div class="settings-section">
               <div class="section-title">
-                <span>▸</span> Notifications
+                <span>▸</span> 通知
               </div>
               
               <div class="form-group">
-                <label class="form-label">Offline Alert</label>
+                <label class="form-label">离线告警</label>
                 <select id="cfg_tg_notify" class="form-select">
-                  <option value="false" ${sys.tg_notify !== 'true' ? 'selected' : ''}>[OFF] Disabled</option>
-                  <option value="true" ${sys.tg_notify === 'true' ? 'selected' : ''}>[ON] Notify after 5min offline</option>
+                  <option value="false" ${sys.tg_notify !== 'true' ? 'selected' : ''}>[关闭] 禁用</option>
+                  <option value="true" ${sys.tg_notify === 'true' ? 'selected' : ''}>[开启] 离线5分钟后通知</option>
                 </select>
               </div>
               
               <div class="form-group">
-                <label class="form-label">Telegram Token / WeChat Webhook</label>
-                <input type="password" id="cfg_tg_bot_token" class="form-input" value="${sys.tg_bot_token || ''}" placeholder="Bot Token or Webhook URL">
+                <label class="form-label">Telegram令牌 / 企业微信Webhook</label>
+                <input type="password" id="cfg_tg_bot_token" class="form-input" value="${sys.tg_bot_token || ''}" placeholder="Bot令牌或Webhook地址">
               </div>
               
               <div class="form-group">
-                <label class="form-label">Chat ID</label>
-                <input type="password" id="cfg_tg_chat_id" class="form-input" value="${sys.tg_chat_id || ''}" placeholder="Telegram Chat ID (optional for WeChat)">
+                <label class="form-label">聊天ID</label>
+                <input type="password" id="cfg_tg_chat_id" class="form-input" value="${sys.tg_chat_id || ''}" placeholder="Telegram Chat ID（企业微信可选填）">
               </div>
             </div>
           </div>
@@ -1056,23 +1056,23 @@ export async function handleAdminUI(request, env, sys) {
         <!-- 自定义注入 -->
         <div style="margin-top: 20px; padding: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 4px;">
           <div class="section-title" style="margin-bottom: 16px;">
-            <span>▸</span> Custom Injection
+            <span>▸</span> 自定义注入
           </div>
           
           <div class="form-group">
-            <label class="form-label">Custom &lt;head&gt;</label>
+            <label class="form-label">自定义&lt;head&gt;</label>
             <textarea id="cfg_custom_head" class="form-textarea" rows="3" placeholder="<link rel='stylesheet' href='...'">${sys.custom_head || ''}</textarea>
           </div>
           
           <div class="form-group">
-            <label class="form-label">Custom Script (footer)</label>
+            <label class="form-label">自定义脚本(底部)</label>
             <textarea id="cfg_custom_script" class="form-textarea" rows="4" placeholder="<script>console.log('Hello');</script>">${sys.custom_script || ''}</textarea>
           </div>
         </div>
         
         <div style="margin-top: 20px; text-align: right;">
           <button onclick="saveSettings()" class="btn btn-primary" style="padding: 12px 24px; font-size: 14px;">
-            💾 SAVE CONFIGURATION
+            💾 保存配置
           </button>
         </div>
       </div>
@@ -1088,43 +1088,43 @@ export async function handleAdminUI(request, env, sys) {
         <input type="hidden" id="editId">
         
         <div class="form-group">
-          <label class="form-label">Group Name</label>
-          <input type="text" id="editGroup" class="form-input" placeholder="e.g. US VPS">
+          <label class="form-label">分组名称</label>
+          <input type="text" id="editGroup" class="form-input" placeholder="例如: 美国VPS">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Price</label>
-          <input type="text" id="editPrice" class="form-input" placeholder="e.g. $40/year">
+          <label class="form-label">价格</label>
+          <input type="text" id="editPrice" class="form-input" placeholder="例如: ¥40/年">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Expiration Date</label>
+          <label class="form-label">到期日期</label>
           <input type="date" id="editExpire" class="form-input">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Bandwidth</label>
-          <input type="text" id="editBandwidth" class="form-input" placeholder="e.g. 1Gbps">
+          <label class="form-label">带宽</label>
+          <input type="text" id="editBandwidth" class="form-input" placeholder="例如: 1Gbps">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Traffic Limit</label>
-          <input type="text" id="editTraffic" class="form-input" placeholder="e.g. 1TB/month">
+          <label class="form-label">流量限制</label>
+          <input type="text" id="editTraffic" class="form-input" placeholder="例如: 1TB/月">
         </div>
         
         <div class="form-group">
           <div class="checkbox-item" style="margin:0;">
             <input type="checkbox" id="editHidden">
             <label>
-              <b>Hide from Public</b><br>
-              <span style="font-size:10px;color:var(--text-muted);">Hide this server from non-logged-in users (dashboard & detail page)</span>
+              <b>对公众隐藏</b><br>
+              <span style="font-size:10px;color:var(--text-muted);">隐藏后未登录用户无法在监控面板和详情页看到此服务器</span>
             </label>
           </div>
         </div>
         
         <div class="modal-footer">
-          <button onclick="closeModal()" class="btn">CANCEL</button>
-          <button onclick="saveEdit()" class="btn btn-primary">SAVE</button>
+          <button onclick="closeModal()" class="btn">取消</button>
+          <button onclick="saveEdit()" class="btn btn-primary">保存</button>
         </div>
       </div>
     </div>
@@ -1153,7 +1153,7 @@ export async function handleAdminUI(request, env, sys) {
       const file = input.files[0];
       if (!file) return;
       if (file.size > 800 * 1024) {
-        alert('[WARN] Image size > 800KB, consider using external URL');
+        alert('[WARN] 图片大小超过800KB，建议使用外链URL');
       }
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -1196,21 +1196,21 @@ export async function handleAdminUI(request, env, sys) {
           body: JSON.stringify(data) 
         });
         if (res.ok) { 
-          alert('[OK] Configuration saved! Reloading...'); 
+          alert('[OK] 配置已保存，正在重新加载...'); 
           location.reload(); 
         } else {
           const err = await res.json();
-          alert('[ERROR] Save failed: ' + (err.error || 'Unknown error'));
+          alert('[ERROR] 保存失败: ' + (err.error || '未知错误'));
         }
       } catch(e) {
-        alert('[ERROR] Save failed: ' + e.message);
+        alert('[ERROR] 保存失败: ' + e.message);
       }
     }
     
     // 添加服务器
     async function addServer() {
       const name = document.getElementById('newName').value.trim();
-      if (!name) return alert('[WARN] Please enter a server name');
+      if (!name) return alert('[WARN] 请输入服务器名称');
       
       try {
         const res = await fetch('/admin/api', { 
@@ -1220,19 +1220,19 @@ export async function handleAdminUI(request, env, sys) {
         });
         if (res.ok) {
           const data = await res.json();
-          alert('[OK] ' + (data.message || 'Server added'));
+          alert('[OK] ' + (data.message || '服务器添加成功'));
           location.reload();
         } else {
-          alert('[ERROR] Add failed');
+          alert('[ERROR] 添加失败');
         }
       } catch(e) {
-        alert('[ERROR] Add failed: ' + e.message);
+        alert('[ERROR] 添加失败: ' + e.message);
       }
     }
     
     // 删除服务器
     async function deleteServer(id) {
-      if (!confirm('[?] Delete this server? This action is irreversible.')) return;
+      if (!confirm('[?] 确定删除此服务器吗？此操作不可逆。')) return;
       
       try {
         const res = await fetch('/admin/api', { 
@@ -1241,17 +1241,17 @@ export async function handleAdminUI(request, env, sys) {
           body: JSON.stringify({ action: 'delete', id }) 
         });
         if (res.ok) location.reload(); 
-        else alert('[ERROR] Delete failed');
+        else alert('[ERROR] 删除失败');
       } catch(e) {
-        alert('[ERROR] Delete failed: ' + e.message);
+        alert('[ERROR] 删除失败: ' + e.message);
       }
     }
     
     // 批量删除
     async function batchDelete() {
       const checked = document.querySelectorAll('.server-checkbox:checked');
-      if (checked.length === 0) return alert('[WARN] Please select servers to delete');
-      if (!confirm('[?] Delete ' + checked.length + ' selected servers? This action is irreversible.')) return;
+      if (checked.length === 0) return alert('[WARN] 请选择要删除的服务器');
+      if (!confirm('[?] 确定删除选中的 ' + checked.length + ' 台服务器吗？此操作不可逆。')) return;
       
       const ids = Array.from(checked).map(cb => cb.value);
       try {
@@ -1261,9 +1261,9 @@ export async function handleAdminUI(request, env, sys) {
           body: JSON.stringify({ action: 'batch_delete', ids }) 
         });
         if (res.ok) location.reload(); 
-        else alert('[ERROR] Delete failed');
+        else alert('[ERROR] 批量删除失败');
       } catch(e) {
-        alert('[ERROR] Delete failed: ' + e.message);
+        alert('[ERROR] 批量删除失败: ' + e.message);
       }
     }
     
@@ -1338,13 +1338,13 @@ export async function handleAdminUI(request, env, sys) {
           body: JSON.stringify(data) 
         });
         if (res.ok) {
-          alert('[OK] Server updated');
+          alert('[OK] 服务器已更新');
           location.reload();
         } else {
-          alert('[ERROR] Save failed');
+          alert('[ERROR] 保存失败');
         }
       } catch(e) {
-        alert('[ERROR] Save failed: ' + e.message);
+        alert('[ERROR] 保存失败: ' + e.message);
       }
     }
     
@@ -1372,7 +1372,7 @@ export async function handleAdminUI(request, env, sys) {
           }, 100);
         });
       } catch(e) {
-        console.error('[ERROR] Refresh stats failed:', e);
+        console.error('[ERROR] 刷新统计失败:', e);
       }
     }
     

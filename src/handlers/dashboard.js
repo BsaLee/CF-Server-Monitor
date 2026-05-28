@@ -160,7 +160,7 @@ export async function handleDashboard(request, env, sys) {
   }
 
   // 生成过滤器标签
-  let filterTagsHtml = `<span class="filter-tag active" data-filter="all">[All] ${results.length}</span>`;
+  let filterTagsHtml = `<span class="filter-tag active" data-filter="all">[全部] ${results.length}</span>`;
   for (const [code, count] of Object.entries(countryStats).sort()) {
     filterTagsHtml += `<span class="filter-tag" data-filter="${code.toLowerCase()}">
       <img src="https://flagcdn.com/16x12/${code.toLowerCase()}.png" alt="${code}"> ${code} [${count}]
@@ -187,7 +187,7 @@ export async function handleDashboard(request, env, sys) {
         const lastUpdated = new Date(server.last_updated).getTime();
         const isOnline = (now - lastUpdated) < 120000;
         const statusColor = isOnline ? 'var(--accent-green)' : 'var(--accent-red)';
-        const statusText = isOnline ? 'ONLINE' : 'OFFLINE';
+        const statusText = isOnline ? '在线' : '离线';
         
         const cpu = parseFloat(server.cpu || 0).toFixed(1);
         const ram = parseFloat(server.ram || 0).toFixed(1);
@@ -213,7 +213,7 @@ export async function handleDashboard(request, env, sys) {
             const diff = expTime - now;
             const expireText = diff > 0 
               ? Math.ceil(diff / (1000 * 3600 * 24)) + 'd' 
-              : '<span style="color:var(--accent-red);">EXPIRED</span>';
+              : '<span style="color:var(--accent-red);">已到期</span>';
             metaHtml += `<div class="card-meta">📅 ${expireText}</div>`;
           }
         }
@@ -230,10 +230,10 @@ export async function handleDashboard(request, env, sys) {
         // 延迟信息
         const pingHtml = `
           <div class="ping-panel">
-            <div class="ping-item"><span class="ping-label">CT</span><span class="ping-value" style="color:${getPingColor(server.ping_ct)}">${server.ping_ct === '0' ? 'TIMEOUT' : server.ping_ct + 'ms'}</span></div>
-            <div class="ping-item"><span class="ping-label">CU</span><span class="ping-value" style="color:${getPingColor(server.ping_cu)}">${server.ping_cu === '0' ? 'TIMEOUT' : server.ping_cu + 'ms'}</span></div>
-            <div class="ping-item"><span class="ping-label">CM</span><span class="ping-value" style="color:${getPingColor(server.ping_cm)}">${server.ping_cm === '0' ? 'TIMEOUT' : server.ping_cm + 'ms'}</span></div>
-            <div class="ping-item"><span class="ping-label">BD</span><span class="ping-value" style="color:${getPingColor(server.ping_bd)}">${server.ping_bd === '0' ? 'TIMEOUT' : server.ping_bd + 'ms'}</span></div>
+            <div class="ping-item"><span class="ping-label">CT</span><span class="ping-value" style="color:${getPingColor(server.ping_ct)}">${server.ping_ct === '0' ? '超时' : server.ping_ct + 'ms'}</span></div>
+            <div class="ping-item"><span class="ping-label">CU</span><span class="ping-value" style="color:${getPingColor(server.ping_cu)}">${server.ping_cu === '0' ? '超时' : server.ping_cu + 'ms'}</span></div>
+            <div class="ping-item"><span class="ping-label">CM</span><span class="ping-value" style="color:${getPingColor(server.ping_cm)}">${server.ping_cm === '0' ? '超时' : server.ping_cm + 'ms'}</span></div>
+            <div class="ping-item"><span class="ping-label">BD</span><span class="ping-value" style="color:${getPingColor(server.ping_bd)}">${server.ping_bd === '0' ? '超时' : server.ping_bd + 'ms'}</span></div>
           </div>`;
 
         cardContentHtml += `
@@ -926,13 +926,13 @@ export async function handleDashboard(request, env, sys) {
         <div class="controls-group">
           <div class="view-toggle">
             <button class="toggle-btn active" id="btn-card" onclick="switchView('card')">
-              ▣ CARDS
+              ▣ 卡片
             </button>
             <button class="toggle-btn" id="btn-table" onclick="switchView('table')">
-              ≡ TABLE
+              ≡ 表格
             </button>
             <button class="toggle-btn" id="btn-map" onclick="switchView('map')">
-              ◉ MAP
+              ◉ 地图
             </button>
           </div>
           <a href="/admin" class="admin-link">⚙ ${sys.admin_title}</a>
@@ -947,21 +947,21 @@ export async function handleDashboard(request, env, sys) {
     <!-- 全局统计 -->
     <div class="global-stats" id="ajax-stats">
       <div class="stat-item">
-        <div class="stat-label">Total Servers</div>
+        <div class="stat-label">服务器总数</div>
         <div class="stat-main-value">${results.length}</div>
         <div class="stat-sub-info">
-          <span style="color:var(--accent-green);">ON:${globalOnline}</span> | 
-          <span style="color:var(--accent-red);">OFF:${globalOffline}</span>
+          <span style="color:var(--accent-green);">在线:${globalOnline}</span> | 
+          <span style="color:var(--accent-red);">离线:${globalOffline}</span>
         </div>
       </div>
       <div class="stat-item">
         <div class="stat-label">
-          Total Traffic ${sys.auto_reset_traffic === 'true' ? '[MONTH]' : ''}
+          总流量 ${sys.auto_reset_traffic === 'true' ? '[月]' : ''}
         </div>
         <div class="stat-main-value" style="font-size:16px;">${formatBytes(globalNetRx)} ↓ | ↑ ${formatBytes(globalNetTx)}</div>
       </div>
       <div class="stat-item">
-        <div class="stat-label">Real-time Speed</div>
+        <div class="stat-label">实时速度</div>
         <div class="stat-main-value" style="font-size:16px;">
           <span style="color:var(--accent-green);">↓ ${formatBytes(globalSpeedIn)}/s</span> | 
           <span style="color:var(--accent-blue);">↑ ${formatBytes(globalSpeedOut)}/s</span>
@@ -980,22 +980,22 @@ export async function handleDashboard(request, env, sys) {
         <table class="terminal-table">
           <thead>
             <tr>
-              <th>STAT</th>
-              <th>HOSTNAME</th>
-              <th>REGION</th>
-              <th>ARCH/OS</th>
+              <th>状态</th>
+              <th>主机名</th>
+              <th>地区</th>
+              <th>系统/架构</th>
               <th>CPU</th>
-              <th>RAM</th>
-              <th>DISK</th>
-              <th>↓ DL</th>
-              <th>↑ UL</th>
-              <th>↓ RX</th>
-              <th>↑ TX</th>
-              <th>UPDATE</th>
+              <th>内存</th>
+              <th>磁盘</th>
+              <th>↓下载</th>
+              <th>↑上传</th>
+              <th>↓入站</th>
+              <th>↑出站</th>
+              <th>更新</th>
             </tr>
           </thead>
           <tbody id="ajax-table">
-            ${tableBodyHtml || '<tr><td colspan="12" style="text-align:center; color:var(--text-muted);">[*] No data available</td></tr>'}
+            ${tableBodyHtml || '<tr><td colspan="12" style="text-align:center; color:var(--text-muted);">[*] 暂无数据</td></tr>'}
           </tbody>
         </table>
       </div>
@@ -1042,7 +1042,7 @@ export async function handleDashboard(request, env, sys) {
     }
     
     function renderFilters(countryStats, totalServers) {
-      let html = '<span class="filter-tag active" data-filter="all">[All] ' + totalServers + '</span>';
+      let html = '<span class="filter-tag active" data-filter="all">[全部] ' + totalServers + '</span>';
       const sorted = Object.entries(countryStats).sort();
       for (const [code, count] of sorted) {
         const cLower = code.toLowerCase();
@@ -1082,7 +1082,7 @@ export async function handleDashboard(request, env, sys) {
           const lastUpdated = new Date(server.last_updated).getTime();
           const isOnline = (now - lastUpdated) < 120000;
           const statusColor = isOnline ? 'var(--accent-green)' : 'var(--accent-red)';
-          const statusText = isOnline ? 'ONLINE' : 'OFFLINE';
+          const statusText = isOnline ? '在线' : '离线';
           const cpu = parseFloat(server.cpu || 0).toFixed(1);
           const ram = parseFloat(server.ram || 0).toFixed(1);
           const disk = parseFloat(server.disk || 0).toFixed(1);
@@ -1105,7 +1105,7 @@ export async function handleDashboard(request, env, sys) {
               const diff = expTime - now;
               const expireText = diff > 0 
                 ? Math.ceil(diff / (1000 * 3600 * 24)) + 'd' 
-                : '<span style="color:var(--accent-red);">EXPIRED</span>';
+                : '<span style="color:var(--accent-red);">已到期</span>';
               metaHtml += '<div class="card-meta">📅 ' + expireText + '</div>';
             }
           }
@@ -1119,10 +1119,10 @@ export async function handleDashboard(request, env, sys) {
           if (server.ip_v6 === '1') badgesHtml += '<span class="badge badge-v6">IPv6</span>';
           
           const pingHtml = '<div class="ping-panel">' +
-            '<div class="ping-item"><span class="ping-label">CT</span><span class="ping-value" style="color:' + getPingColor(server.ping_ct) + '">' + (server.ping_ct === '0' ? 'TIMEOUT' : server.ping_ct + 'ms') + '</span></div>' +
-            '<div class="ping-item"><span class="ping-label">CU</span><span class="ping-value" style="color:' + getPingColor(server.ping_cu) + '">' + (server.ping_cu === '0' ? 'TIMEOUT' : server.ping_cu + 'ms') + '</span></div>' +
-            '<div class="ping-item"><span class="ping-label">CM</span><span class="ping-value" style="color:' + getPingColor(server.ping_cm) + '">' + (server.ping_cm === '0' ? 'TIMEOUT' : server.ping_cm + 'ms') + '</span></div>' +
-            '<div class="ping-item"><span class="ping-label">BD</span><span class="ping-value" style="color:' + getPingColor(server.ping_bd) + '">' + (server.ping_bd === '0' ? 'TIMEOUT' : server.ping_bd + 'ms') + '</span></div>' +
+            '<div class="ping-item"><span class="ping-label">CT</span><span class="ping-value" style="color:' + getPingColor(server.ping_ct) + '">' + (server.ping_ct === '0' ? '超时' : server.ping_ct + 'ms') + '</span></div>' +
+            '<div class="ping-item"><span class="ping-label">CU</span><span class="ping-value" style="color:' + getPingColor(server.ping_cu) + '">' + (server.ping_cu === '0' ? '超时' : server.ping_cu + 'ms') + '</span></div>' +
+            '<div class="ping-item"><span class="ping-label">CM</span><span class="ping-value" style="color:' + getPingColor(server.ping_cm) + '">' + (server.ping_cm === '0' ? '超时' : server.ping_cm + 'ms') + '</span></div>' +
+            '<div class="ping-item"><span class="ping-label">BD</span><span class="ping-value" style="color:' + getPingColor(server.ping_bd) + '">' + (server.ping_bd === '0' ? '超时' : server.ping_bd + 'ms') + '</span></div>' +
           '</div>';
           
           html += '<a href="/?id=' + server.id + '" class="server-card" data-country="' + cCode + '">' +
@@ -1153,7 +1153,7 @@ export async function handleDashboard(request, env, sys) {
     
     function renderTable(servers, now) {
       if (servers.length === 0) {
-        return '<tr><td colspan="12" style="text-align:center; color:var(--text-muted);">[*] No data available</td></tr>';
+        return '<tr><td colspan="12" style="text-align:center; color:var(--text-muted);">[*] 暂无数据</td></tr>';
       }
       
       let html = '';
@@ -1186,28 +1186,28 @@ export async function handleDashboard(request, env, sys) {
           '<td>' + netOutSpeed + '/s</td>' +
           '<td>' + monthlyRx + '</td>' +
           '<td>' + monthlyTx + '</td>' +
-          '<td class="update-time">' + updateSec + 's ago</td>' +
+          '<td class="update-time">' + updateSec + '秒前</td>' +
         '</tr>';
       }
       return html;
     }
     
     function renderStats(stats) {
-      const trafficLabel = sysConfig.auto_reset_traffic ? '[MONTH]' : '';
+      const trafficLabel = sysConfig.auto_reset_traffic ? '[月]' : '';
       return '<div class="stat-item">' +
-        '<div class="stat-label">Total Servers</div>' +
+        '<div class="stat-label">服务器总数</div>' +
         '<div class="stat-main-value">' + stats.total + '</div>' +
         '<div class="stat-sub-info">' +
-          '<span style="color:var(--accent-green);">ON:' + stats.online + '</span> | ' +
-          '<span style="color:var(--accent-red);">OFF:' + stats.offline + '</span>' +
+          '<span style="color:var(--accent-green);">在线:' + stats.online + '</span> | ' +
+          '<span style="color:var(--accent-red);">离线:' + stats.offline + '</span>' +
         '</div>' +
       '</div>' +
       '<div class="stat-item">' +
-        '<div class="stat-label">Total Traffic ' + trafficLabel + '</div>' +
+        '<div class="stat-label">总流量 ' + trafficLabel + '</div>' +
         '<div class="stat-main-value" style="font-size:16px;">' + formatBytes(stats.globalNetRx) + ' ↓ | ↑ ' + formatBytes(stats.globalNetTx) + '</div>' +
       '</div>' +
       '<div class="stat-item">' +
-        '<div class="stat-label">Real-time Speed</div>' +
+        '<div class="stat-label">实时速度</div>' +
         '<div class="stat-main-value" style="font-size:16px;">' +
           '<span style="color:var(--accent-green);">↓ ' + formatBytes(stats.globalSpeedIn) + '/s</span> | ' +
           '<span style="color:var(--accent-blue);">↑ ' + formatBytes(stats.globalSpeedOut) + '/s</span>' +

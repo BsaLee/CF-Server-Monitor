@@ -15,7 +15,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
   }
   
   const server = await env.DB.prepare(query).bind(viewId).first();
-  if (!server) return new Response('Server not found', { status: 404 });
+  if (!server) return new Response('服务器未找到', { status: 404 });
 
   const now = Date.now();
   const serverLastUpdated = new Date(server.last_updated).getTime();
@@ -535,56 +535,56 @@ export async function handleServerDetail(request, env, sys, viewId) {
         </div>
         <span class="status-badge ${isOnline ? 'online' : 'offline'}" id="head-status">
           <span class="pulse-dot ${isOnline ? 'online' : 'offline'}"></span>
-          ${isOnline ? 'ONLINE' : 'OFFLINE'}
+          ${isOnline ? '在线' : '离线'}
         </span>
       </div>
       <div class="sysinfo-grid" id="info-panel">
         <div class="sysinfo-item">
-          <span class="sysinfo-label">⏱ Uptime</span>
+          <span class="sysinfo-label">⏱ 运行时长</span>
           <span class="sysinfo-value" id="val-uptime">${server.uptime || 'N/A'}</span>
         </div>
         <div class="sysinfo-item">
-          <span class="sysinfo-label">🏗 Architecture</span>
+          <span class="sysinfo-label">🏗 系统架构</span>
           <span class="sysinfo-value" id="val-arch">${server.arch || 'N/A'}</span>
         </div>
         <div class="sysinfo-item">
-          <span class="sysinfo-label">💻 OS</span>
+          <span class="sysinfo-label">💻 操作系统</span>
           <span class="sysinfo-value" id="val-os">${server.os || 'N/A'}</span>
         </div>
         <div class="sysinfo-item">
-          <span class="sysinfo-label">🔧 CPU Model</span>
+          <span class="sysinfo-label">🔧 CPU 型号</span>
           <span class="sysinfo-value" id="val-cpuinfo" style="font-size:11px;">${(server.cpu_info || 'N/A').substring(0, 40)}</span>
         </div>
         <div class="sysinfo-item">
-          <span class="sysinfo-label">⚙️ CPU Cores</span>
+          <span class="sysinfo-label">⚙️ CPU 核心数</span>
           <span class="sysinfo-value" id="val-cpucores">${server.cpu_cores || 'N/A'}</span>
         </div>
         <div class="sysinfo-item">
-          <span class="sysinfo-label">📊 Load Average</span>
+          <span class="sysinfo-label">📊 系统负载</span>
           <span class="sysinfo-value highlight" id="val-load">${server.load_avg || '0.00'}</span>
         </div>
         <div class="sysinfo-item">
-          <span class="sysinfo-label">🕐 Boot Time</span>
+          <span class="sysinfo-label">🕐 启动时间</span>
           <span class="sysinfo-value" id="val-boot" style="font-size:11px;">${server.boot_time || 'N/A'}</span>
         </div>
         <div class="sysinfo-item">
-          <span class="sysinfo-label">💾 Total RAM</span>
+          <span class="sysinfo-label">💾 总内存</span>
           <span class="sysinfo-value" id="val-ram-total">${(parseFloat(server.ram_total)/1024).toFixed(1)} GiB</span>
         </div>
         <div class="sysinfo-item">
-          <span class="sysinfo-label">💿 Total Disk</span>
+          <span class="sysinfo-label">💿 总磁盘</span>
           <span class="sysinfo-value" id="val-disk-total">${(parseFloat(server.disk_total)/1024).toFixed(1)} GiB</span>
         </div>
         <div class="sysinfo-item">
-          <span class="sysinfo-label">🔽 Traffic In</span>
+          <span class="sysinfo-label">🔽 流量入站</span>
           <span class="sysinfo-value" id="val-traffic-in">${formatBytes(server.monthly_rx)}</span>
         </div>
         <div class="sysinfo-item">
-          <span class="sysinfo-label">🔼 Traffic Out</span>
+          <span class="sysinfo-label">🔼 流量出站</span>
           <span class="sysinfo-value" id="val-traffic-out">${formatBytes(server.monthly_tx)}</span>
         </div>
         <div class="sysinfo-item">
-          <span class="sysinfo-label">⏰ Last Report</span>
+          <span class="sysinfo-label">⏰ 最后上报</span>
           <span class="sysinfo-value" id="val-last-report">${new Date(serverLastUpdated).toLocaleString(undefined, { hour12: false })}</span>
         </div>
       </div>
@@ -597,7 +597,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
         <div class="chart-card-header">
           <span class="chart-title">
             <span class="chart-title-icon">▸</span>
-            CPU Usage
+            CPU 使用率
           </span>
           <span class="chart-current-value" id="text-cpu">${server.cpu || '0'}%</span>
         </div>
@@ -611,12 +611,12 @@ export async function handleServerDetail(request, env, sys, viewId) {
         <div class="chart-card-header">
           <span class="chart-title">
             <span class="chart-title-icon">▸</span>
-            Memory Usage
+            内存使用率
           </span>
           <div>
             <span class="chart-current-value" id="text-ram">${server.ram || '0'}%</span>
             <div class="chart-subtitle" id="text-swap">
-              Swap: ${server.swap_used || '0'} / ${server.swap_total || '0'} MiB
+              交换分区: ${server.swap_used || '0'} / ${server.swap_total || '0'} MiB
             </div>
           </div>
         </div>
@@ -630,12 +630,12 @@ export async function handleServerDetail(request, env, sys, viewId) {
         <div class="chart-card-header">
           <span class="chart-title">
             <span class="chart-title-icon">▸</span>
-            Disk Usage
+            磁盘使用率
           </span>
           <div>
             <span class="chart-current-value" id="text-disk">${server.disk || '0'}%</span>
             <div class="chart-subtitle" id="text-disk-detail">
-              Used ${(parseFloat(server.disk_used)/1024).toFixed(2)} / ${(parseFloat(server.disk_total)/1024).toFixed(2)} GiB
+              已用 ${(parseFloat(server.disk_used)/1024).toFixed(2)} / ${(parseFloat(server.disk_total)/1024).toFixed(2)} GiB
             </div>
           </div>
         </div>
@@ -649,7 +649,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
         <div class="chart-card-header">
           <span class="chart-title">
             <span class="chart-title-icon">▸</span>
-            Network Traffic
+            网络流量
           </span>
           <div class="net-indicator">
             <span class="net-down">▼ <span id="text-net-in">${formatBytes(server.net_in_speed)}/s</span></span>
@@ -666,7 +666,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
         <div class="chart-card-header">
           <span class="chart-title">
             <span class="chart-title-icon">▸</span>
-            Processes
+            进程数
           </span>
           <span class="chart-current-value" id="text-proc">${server.processes || '0'}</span>
         </div>
@@ -680,7 +680,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
         <div class="chart-card-header">
           <span class="chart-title">
             <span class="chart-title-icon">▸</span>
-            Connections
+            连接数
           </span>
           <div class="net-indicator">
             <span style="color: var(--accent-purple);">TCP <b id="text-tcp">${server.tcp_conn || '0'}</b></span>
@@ -716,13 +716,13 @@ export async function handleServerDetail(request, env, sys, viewId) {
     <div class="status-bar">
       <div class="status-bar-item">
         <span class="status-bar-dot"></span>
-        <span>Last update: <span id="last-update">just now</span></span>
+        <span>最后更新: <span id="last-update">刚刚</span></span>
       </div>
       <div class="status-bar-item">
-        <span>Auto-refresh: 60s (status)</span>
+        <span>自动刷新: 60秒 (状态)</span>
       </div>
       <div class="status-bar-item">
-        <span>Shortcut: Ctrl+R to refresh</span>
+        <span>快捷键: Ctrl+R 刷新</span>
       </div>
     </div>
     
@@ -913,7 +913,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
       type: 'line',
       data: { 
         datasets: [{ 
-          label: 'Memory', 
+          label: '内存', 
           data: [], 
           borderColor: '#b392f0', 
           backgroundColor: 'rgba(179, 146, 240, 0.05)', 
@@ -929,7 +929,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
       type: 'line',
       data: { 
         datasets: [{ 
-          label: 'Disk', 
+          label: '磁盘', 
           data: [], 
           borderColor: '#39d2c0', 
           backgroundColor: 'rgba(57, 210, 192, 0.05)', 
@@ -945,7 +945,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
       type: 'line',
       data: { 
         datasets: [{ 
-          label: 'Processes', 
+          label: '进程', 
           data: [], 
           borderColor: '#f778ba', 
           backgroundColor: 'rgba(247, 120, 186, 0.03)', 
@@ -962,7 +962,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
       data: {
         datasets: [
           { 
-            label: 'Download', 
+            label: '下载', 
             data: [], 
             borderColor: '#00d4aa', 
             backgroundColor: 'rgba(0, 212, 170, 0.03)', 
@@ -973,7 +973,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
             hoverRadius: 5 
           },
           { 
-            label: 'Upload', 
+            label: '上传', 
             data: [], 
             borderColor: '#4da6ff', 
             backgroundColor: 'rgba(77, 166, 255, 0.03)', 
@@ -1015,7 +1015,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
           }
         ]
       },
-      options: createChartOptions('', true, 'Connections')
+      options: createChartOptions('', true, '连接数')
     });
     
     // 延迟图表 (四线) - 保持原有颜色但有终端风格
@@ -1295,7 +1295,7 @@ export async function handleServerDetail(request, env, sys, viewId) {
         const lastUpdatedTime = new Date(data.last_updated).getTime();
         const isOnline = (Date.now() - lastUpdatedTime) < 120000;
         const badge = document.getElementById('head-status');
-        badge.innerHTML = \`<span class="pulse-dot \${isOnline ? 'online' : 'offline'}"></span>\${isOnline ? 'ONLINE' : 'OFFLINE'}\`;
+        badge.innerHTML = \`<span class="pulse-dot \${isOnline ? 'online' : 'offline'}"></span>\${isOnline ? '在线' : '离线'}\`;
         badge.className = 'status-badge ' + (isOnline ? 'online' : 'offline');
         
         const cCode = (data.country || 'xx').toLowerCase();
@@ -1318,9 +1318,9 @@ export async function handleServerDetail(request, env, sys, viewId) {
         document.getElementById('val-last-report').innerText = new Date(lastUpdatedTime).toLocaleString(undefined, { hour12: false });
         
         document.getElementById('text-disk-detail').innerText = 
-          \`Used \${(parseFloat(data.disk_used)/1024).toFixed(2)} / \${(parseFloat(data.disk_total)/1024).toFixed(2)} GiB\`;
+          \`已用 \${(parseFloat(data.disk_used)/1024).toFixed(2)} / \${(parseFloat(data.disk_total)/1024).toFixed(2)} GiB\`;
         document.getElementById('text-swap').innerText = 
-          \`Swap: \${data.swap_used || '0'} / \${data.swap_total || '0'} MiB\`;
+          \`交换分区: \${data.swap_used || '0'} / \${data.swap_total || '0'} MiB\`;
         
         document.getElementById('t-ct').innerText = data.ping_ct + 'ms';
         document.getElementById('t-cu').innerText = data.ping_cu + 'ms';
